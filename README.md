@@ -1,0 +1,1 @@
+# onap-on-openshift
