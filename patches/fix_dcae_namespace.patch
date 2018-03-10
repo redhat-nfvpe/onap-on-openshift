@@ -1,0 +1,22 @@
+diff --git a/kubernetes/oneclick/createAll.bash b/kubernetes/oneclick/createAll.bash
+index 254813b..9e702e2 100755
+--- a/kubernetes/oneclick/createAll.bash
++++ b/kubernetes/oneclick/createAll.bash
+@@ -50,7 +50,7 @@ configure_dcaegen2() {
+     return 1
+   fi
+ 
+-  cmd=`echo kubectl --namespace $1-$2 create secret generic $2-openstack-ssh-private-key --from-file=key=${OPENSTACK_PRIVATE_KEY_PATH}`
++  cmd=`echo kubectl --namespace $1 create secret generic $2-openstack-ssh-private-key --from-file=key=${OPENSTACK_PRIVATE_KEY_PATH}`
+   eval ${cmd}
+   check_return_code $cmd
+ 
+@@ -60,7 +60,7 @@ configure_dcaegen2() {
+     return 1
+   fi
+ 
+-  cmd=`echo kubectl --namespace $1-$2 create configmap $2-config-inputs --from-file=inputs.yaml=${DCAEGEN2_CONFIG_INPUT_FILE_PATH}`
++  cmd=`echo kubectl --namespace $1 create configmap $2-config-inputs --from-file=inputs.yaml=${DCAEGEN2_CONFIG_INPUT_FILE_PATH}`
+   eval ${cmd}
+   check_return_code $cmd
+ }
