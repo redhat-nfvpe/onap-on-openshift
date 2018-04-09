@@ -25,6 +25,7 @@ echo -e "\n== Download OOM =="
 rm -r $WORKING_DIR/oom
 git clone http://gerrit.onap.org/r/oom $WORKING_DIR/oom
 cd $WORKING_DIR/oom
+git reset --hard 8407a7a0f807af1e255405d22f73df9d36dbd846 # known working commit
 
 echo -e "\n== Patch OOM =="
 for p in $SCRIPT_DIR/patches/*.patch; do
