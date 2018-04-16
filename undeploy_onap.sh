@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
-NS=onap
-WORKING_DIR=$HOME
+: "${NAMESPACE:=onap}"
+: "${DEPLOYMENT:=dev}"
+: "${WORKING_DIR:=$HOME}"
+SCRIPT_DIR=$(pwd)
 
-echo -e "\n== Undeploy ONAP =="
-cd $WORKING_DIR/oom/kubernetes/oneclick/tools
-./autoCleanConfig.bash $NS
+title() { echo -e "\E[34m\n== $1 ==\E[00m"; }
+
+title "Undeploying ONAP"
+helm delete $DEPLOYMENT --purge
+oc delete project $NAMESPACE
+
