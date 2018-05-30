@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$(pwd)
+: "${WORKING_DIR:=$HOME/.ooo}"
 : "${NAMESPACE:=onap}"
 : "${DEPLOYMENT:=dev}"
-: "${WORKING_DIR:=$HOME}"
 : "${OOM_COMMIT:=HEAD}"
 : "${CONFIG_FILE:=$SCRIPT_DIR/configs/onap-config.yaml}"
 
@@ -57,4 +57,3 @@ if [[ -e $CONFIG_FILE ]]; then
 else
   helm install local/onap --name=$DEPLOYMENT --namespace=$NAMESPACE
 fi
-

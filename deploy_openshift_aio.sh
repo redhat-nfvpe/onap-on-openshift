@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR=$(pwd)
 : "${OC_URL:=https://github.com/openshift/origin/releases/download/v3.9.0/openshift-origin-client-tools-v3.9.0-191fece-linux-64bit.tar.gz}"
 : "${KUBECTL_VERSION:=v1.9.1}"
 : "${HELM_VERSION:=v2.8.2}"
@@ -8,7 +9,6 @@ OC_TARFILE=$(basename $OC_URL)
 OC_DIR=$(basename -s .tar.gz $OC_URL)
 HELM_URL=https://kubernetes-helm.storage.googleapis.com/helm-$HELM_VERSION-linux-amd64.tar.gz
 HELM_TARFILE=$(basename $HELM_URL)
-SCRIPT_DIR=$(pwd)
 
 title() { echo -e "\E[34m\n== $1 ==\E[00m"; }
 
@@ -58,7 +58,7 @@ cd /tmp
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/bin/kubectl
-cd $SCRIPT_DIR 
+cd $SCRIPT_DIR
 
 title "Installing Tiller server $HELM_VERSION"
 if ! oc project $TILLER_NAMESPACE 2> /dev/null; then
@@ -80,4 +80,3 @@ cd $SCRIPT_DIR
 helm init --client-only --tiller-namespace=$TILLER_NAMESPACE
 export HELM_HOME
 helm version
-
