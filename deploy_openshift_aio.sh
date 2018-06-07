@@ -7,6 +7,7 @@ SCRIPT_DIR=$(pwd)
 : "${TILLER_NAMESPACE:=kube-system}"
 OC_TARFILE=$(basename $OC_URL)
 OC_DIR=$(basename -s .tar.gz $OC_URL)
+PATH_NODE_CONFIG=/var/lib/origin/openshift.local.config/node-localhost/node-config.yaml
 HELM_URL=https://kubernetes-helm.storage.googleapis.com/helm-$HELM_VERSION-linux-amd64.tar.gz
 HELM_TARFILE=$(basename $HELM_URL)
 
@@ -47,8 +48,20 @@ rm -r $OC_DIR $OC_TARFILE
 cd $SCRIPT_DIR
 oc version
 
-title "Deploying OpenShift AIO cluster"
+title "Initializing OpenShift AIO cluster"
 oc cluster up --service-catalog=true --public-hostname=$(hostname -f)
+oc cluster down
+
+title "Reconfiguring OpenShift AIO cluster"
+if ! grep "pods-per-core" $PATH_NODE_CONFIG; then
+  sed -i -e "s/kubeletArguments:/kubeletArguments:\n  pods-per-core:\n  - \"0\"/" $PATH_NODE_CONFIG
+  echo "Set pods-per-node."
+else
+  echo "Configuration completed previously."
+fi
+
+title "Bringing up OpenShift AIO cluster"
+oc cluster up --use-existing-config --service-catalog=true --public-hostname=$(hostname -f)
 
 title "Logging into the OpenShift AIO cluster"
 oc login -u system:admin
