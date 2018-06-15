@@ -20,7 +20,7 @@ cd "$WORKING_DIR/openshift-ansible"
 ansible-playbook \
   -i ../inventory/aws_provisioning_inventory.ini \
   -e @../inventory/aws_provisioning_vars.yml \
-  --private_key=$SSH_KEY \
+  --private-key=$SSH_KEY \
   playbooks/aws/openshift-cluster/uninstall.yml
 
 # rm -rf ~/.kube ~/.helm
