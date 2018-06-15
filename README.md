@@ -7,19 +7,18 @@ application lifecycle management functionality, and DevOps tooling.
 
 Deployment consists of two simple steps:
 1. Deploy an OpenShift cluster.
-  * "all-in-one" on a single baremetal or virtual machine. Choose this option for a simple ONAP test-drive or for ONAP development.
-  * "multi-node" (coming soon) on a public or private cloud. Choose this option for
-  a more production-like environment.
-1. Deploy ONAP.
+  * "all-in-one" on a single baremetal or virtual machine. Choose this option for test-driving of or development on a subset of ONAP components (whole ONAP is likely too heavy-weight for a single node).
+  * "multi-node" (coming soon) on a public or private cloud. Choose this option for a full ONAP deployment on a production-like OpenShift environment.
+2. Deploy ONAP.
 
 ## 1. Deploy an OpenShift Cluster
 ### All-in-one Cluster
 Prerequisites:
-* A physical or virtual machine (e.g. from a public cloud provider) min. 64GB RAM, 8 CPU cores, and 200GB disk for a full ONAP install (note that the requirements for OpenShift itself are negligible in comparison).
+* A physical or virtual machine (e.g. from a public cloud provider) with minimum 64GB RAM, 8 CPU cores, and 200GB disk for a reduced ONAP install (note that the requirements for OpenShift itself are negligible in comparison).
 * RHEL or CentOS 7.4 or higher installed.
 * User with privileges to `sudo` into root.
 
-To deploy Openshift:
+To deploy Openshift:M
 
     git clone https://github.com/redhat-nfvpe/onap-on-openshift.git
     cd onap-on-OpenShift
@@ -50,6 +49,6 @@ To undeploy ONAP (note this may take several 10mins!):
 
 Notes:
 
-This script clones the ONAP Operations Manager (OOM) repo and automates the steps described in the [User Guide](http://onap.readthedocs.io/en/latest/submodules/oom.git/docs/oom_user_guide.html#user-guide-label) to configure and deploy ONAP.
+This script reconfigures OpenShift's security controls to allow ONAP's unsecure use of hostdirs and privileged container image users. It then clones the ONAP Operations Manager (OOM) repo and automates the steps described in the [User Guide](http://onap.readthedocs.io/en/latest/submodules/oom.git/docs/oom_user_guide.html#user-guide-label) to configure and deploy ONAP.
 
 To modify which ONAP services are deployed, edit the file `configs/onap-config.yaml` to enable or disable ONAP services before running `deploy_onap.sh`.
