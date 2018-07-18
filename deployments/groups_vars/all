@@ -1,0 +1,3 @@
+# vim: set ft=yaml :
+---
+vpc_subnet_id: subnet-a1d31ffd
