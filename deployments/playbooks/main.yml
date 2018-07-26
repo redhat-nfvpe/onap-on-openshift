@@ -1,0 +1,19 @@
+---
+- name: Create a sandbox instance
+  hosts: localhost
+  gather_facts: False
+  vars:
+    keypair: aws_openshift
+    instance_type: t2.large
+    security_group: sg-<unique_id>    # add your security group ID here
+    image: ami-9887c6e7
+    region: us-east-1
+  tasks:
+    - include_tasks: launch.yml
+      with_items:
+        - openshift-master
+        - openshift-node-1
+        - openshift-node-2
+        - openshift-node-3
+      loop_control:
+        loop_var: node_name
