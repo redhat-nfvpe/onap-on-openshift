@@ -1,11 +1,11 @@
     - name: Launch instance
       ec2:
-         key_name: "{{ keypair }}"
-         group_id: "{{ security_group }}"
-         instance_type: "{{ instance_type }}"
-         image: "{{ image }}"
+         key_name: "{{ aws_keypair }}"
+         group_id: "{{ sg_id }}"
+         instance_type: "{{ aws_instance_type }}"
+         image: "{{ aws_image }}"
          wait: true
-         region: "{{ region }}"
+         region: "{{ aws_region }}"
          vpc_subnet_id: "{{ vpc_subnet_id }}"
          assign_public_ip: yes
       register: ec2
