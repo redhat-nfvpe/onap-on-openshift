@@ -1,10 +1,11 @@
     - name: Launch instance
       ec2:
          key_name: "{{ aws_keypair }}"
-         group_id: "{{ sg_id }}"
-         instance_type: "{{ aws_instance_type }}"
+         groups: "{{ node.security_groups }}"
+         instance_type: "{{ node.instance_type | default(aws_default_instance_type) }}"
          instance_tags:
-           Name: "{{ node_name }}"
+           Name: "{{ node.name }}"
+           OpenShiftType: "{{ node.type }}"
            NetworkSpace: ONAP
            Network: External
          image: "{{ aws_image }}"
@@ -13,7 +14,7 @@
          vpc_subnet_id: "{{ vpc_subnet_id }}"
          assign_public_ip: yes
          count_tag:
-           Name: "{{ node_name }}"
+           Name: "{{ node.name }}"
          exact_count: 1
       register: ec2
 

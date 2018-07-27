@@ -1,3 +1,4 @@
+# vim: set ft=ansible tabstop=2 shiftwidth=2 :
 ---
 - name: Setup prerequisite variables
   hosts: localhost
@@ -13,12 +14,17 @@
       set_fact:
         provisioned_vms: []
 
+    # create our virtual private cloud and networks
     - include_tasks: vpc.yml
-    - include_tasks: launch.yml
-      with_items:
-        - openshift-master
-        - openshift-node-1
-        - openshift-node-2
-        - openshift-node-3
+
+    # setup security groups
+    - include_tasks: security_groups.yml
+      with_items: "{{ openshift_security_groups }}"
       loop_control:
-        loop_var: node_name
+        loop_var: group
+
+    # launch virtual machines
+    - include_tasks: launch.yml
+      with_items: "{{ openshift_nodes }}"
+      loop_control:
+        loop_var: node
