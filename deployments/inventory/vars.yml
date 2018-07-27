@@ -4,6 +4,7 @@ aws_keypair: openshift_onap
 aws_default_instance_type: t2.large
 aws_image: ami-9887c6e7
 aws_region: us-east-1
+wait_for_ssh: False         # mark this true to wait for nodes to have SSH
 openshift_nodes:
   - name: openshift-master
     type: master
@@ -31,6 +32,10 @@ openshift_security_groups:
         cidr_ip: 0.0.0.0/0
   - name: openshift_internal
     rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
       - proto: all
         ports:
           - 0-65535
