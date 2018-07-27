@@ -1,6 +1,37 @@
-# vim: set ft=yaml :
+# vim: set ft=yaml tabstop=2 shiftwidth=2 :
 ---
 aws_keypair: openshift_onap
-aws_instance_type: t2.large
+aws_default_instance_type: t2.large
 aws_image: ami-9887c6e7
 aws_region: us-east-1
+openshift_nodes:
+  - name: openshift-master
+    type: master
+    security_groups:
+      - openshift_infra
+      - openshift_internal
+  - name: openshift-node-1
+    type: compute
+    security_groups:
+      - openshift_internal
+  - name: openshift-node-2
+    type: compute
+    security_groups:
+      - openshift_internal
+openshift_security_groups:
+  - name: openshift_infra
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 8443
+        to_port: 8443
+        cidr_ip: 0.0.0.0/0
+  - name: openshift_internal
+    rules:
+      - proto: all
+        ports:
+          - 0-65535
+        cidr_ip: 10.0.0.0/16
