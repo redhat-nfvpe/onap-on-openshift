@@ -1,4 +1,69 @@
+# vim: set ft=yaml shiftwidth=2 tabstop=2 expandtab :
 ---
 {% for node in inventory_nodes %}
 {{ node.tags.Name }} ansible_host={{ node.public_ip }}
 {% endfor %}
+
+[OSEv3:children]
+masters
+etcd
+glusterfs
+nodes
+
+[OSEv3:vars]
+ansible_become=yes
+debug_level=4
+
+# storage
+openshift_storage_glusterfs_namespace=glusterfs
+openshift_storage_glusterfs_name=storage
+openshift_storage_glusterfs_storageclass_default=true
+
+# service broker
+openshift_enable_service_catalog=true
+openshift_service_catalog_image_version=v3.9
+
+# main setup
+openshift_disable_check=disk_availability,memory_availability,docker_image_availability
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_deployment_type=origin
+openshift_release=v3.9
+enable_excluders=false
+openshift_clock_enabled=true
+
+# hostname setup
+openshift_hostname_check=true
+openshift_master_default_subdomain=apps.onap.nfvpe.site
+openshift_master_cluster_hostname=master.onap.nfvpe.site
+openshift_master_cluster_public_hostname=console.onap.nfvpe.site
+
+# ansible service broker
+#ansible_service_broker_registry_user=
+#ansible_service_broker_registry_password=
+#ansible_service_broker_registry_organization=ansibleplaybookbundle
+#ansible_service_broker_registry_whitelist=[".*-apb$"]
+#ansible_service_broker_local_registry_whitelist=[".*"]
+
+[masters]
+openshift-master
+
+[etcd]
+openshift-master
+
+[nodes]
+openshift-master openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+openshift-node-[1:2] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+
+[glusterfs]
+openshift-master
+openshift-node-[1:2]
+
+[glusterfs:vars]
+glusterfs_devices=[ "/dev/vdb" ]
+r_openshift_storage_glusterfs_use_firewalld=false
+r_openshift_storage_glusterfs_firewall_enabled=true
+openshift_storage_glusterfs_timeout=900
+openshift_storage_glusterfs_wipe=true
+
+[all:vars]
+ansible_user=centos
