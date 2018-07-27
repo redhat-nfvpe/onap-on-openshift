@@ -6,6 +6,7 @@
         cidr_block: 10.10.0.0/16
         region: "{{ aws_region }}"
         state: present
+        tags: { "NetworkSpace" : "ONAP" }
       register: this_vpc
 
     - name: Set VPC ID variable
@@ -18,6 +19,7 @@
         cidr: 10.10.10.0/24
         az: "{{ aws_region }}a"
         region: "{{ aws_region }}"
+        tags: { "NetworkSpace" : "ONAP", "Network" : "External" }
       register: this_vpc_subnet
 
     - name: Set VPC Subnet ID variable
@@ -29,6 +31,7 @@
         vpc_id: "{{ vpc_id }}"
         region: "{{ aws_region }}"
         state: present
+        tags: { "NetworkSpace" : "ONAP", "Network" : "External" }
       register: this_vpc_igw
 
     - name: Set VPC gateway variable
@@ -39,6 +42,7 @@
       ec2_vpc_route_table:
         vpc_id: "{{ vpc_id }}"
         region: "{{ aws_region }}"
+        tags: { "NetworkSpace" : "ONAP", "Network" : "External" }
         subnets:
           - "{{ vpc_subnet_id }}"
         routes:
@@ -51,6 +55,7 @@
         description: "Security group for ONAP on OpenShift"
         vpc_id: "{{ vpc_id }}"
         region: "{{ aws_region }}"
+        tags: { "NetworkSpace" : "ONAP", "Network" : "External" }
         rules:
           - proto: "tcp"
             from_port: "22"

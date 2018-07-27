@@ -9,6 +9,10 @@
   hosts: localhost
   gather_facts: False
   tasks:
+    - name: Initialize empty list for provisioned virtual machines
+      set_fact:
+        provisioned_vms: []
+
     - include_tasks: vpc.yml
     - include_tasks: launch.yml
       with_items:
