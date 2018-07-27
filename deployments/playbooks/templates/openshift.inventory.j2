@@ -1,0 +1,4 @@
+---
+{% for node in inventory_nodes %}
+{{ node.tags.Name }} ansible_host={{ node.public_ip }}
+{% endfor %}

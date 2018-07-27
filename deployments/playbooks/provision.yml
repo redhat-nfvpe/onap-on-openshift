@@ -28,3 +28,24 @@
       with_items: "{{ openshift_nodes }}"
       loop_control:
         loop_var: node
+
+    - set_fact:
+        inventory_nodes: []
+
+    - set_fact:
+        inventory_nodes: "{{ inventory_nodes + [item.tagged_instances.0] }}"
+      with_items: "{{ provisioned_vms }}"
+
+    - debug:
+        var: inventory_nodes
+    #        var: item.tagged_instances.0.public_ip
+    #  with_items: "{{ provisioned_vms }}"
+
+
+    - name: Build a local inventory
+      template:
+        src: templates/openshift.inventory.j2
+        dest: "{{ playbook_dir }}/../inventory/openshift.inventory"
+      delegate_to: localhost
+      ignore_errors: yes
+
