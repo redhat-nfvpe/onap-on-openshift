@@ -1,22 +1,34 @@
+
     - name: Launch instance
       ec2:
-         key_name: "{{ aws_keypair }}"
-         groups: "{{ node.security_groups }}"
-         instance_type: "{{ node.instance_type | default(aws_default_instance_type) }}"
-         instance_tags:
-           Name: "{{ node.name }}"
-           OpenShiftType: "{{ node.type }}"
-           NetworkSpace: ONAP
-           Network: External
-         image: "{{ aws_image }}"
-         wait: true
-         region: "{{ aws_region }}"
-         vpc_subnet_id: "{{ vpc_subnet_id }}"
-         assign_public_ip: yes
-         count_tag:
-           Name: "{{ node.name }}"
-         exact_count: 1
+        key_name: "{{ aws_keypair }}"
+        groups: "{{ node.security_groups }}"
+        instance_type: "{{ node.instance_type | default(aws_default_instance_type) }}"
+        instance_tags:
+          Name: "{{ node.name }}"
+          OpenShiftType: "{{ node.type }}"
+          NetworkSpace: ONAP
+          Network: External
+        image: "{{ aws_image }}"
+        wait: true
+        region: "{{ aws_region }}"
+        vpc_subnet_id: "{{ vpc_subnet_id }}"
+        assign_public_ip: yes
+        count_tag:
+         Name: "{{ node.name }}"
+        exact_count: 1
       register: ec2
+
+    - name: Create a volume for persistent storage
+      ec2_vol:
+        instance: "{{ item.id }}"
+        name: storage_volume_{{ node.name }}
+        device_name: /dev/xvdf
+        region: "{{ aws_region }}"
+        volume_size: 20
+        delete_on_termination: yes
+      with_items: "{{ ec2.instances }}"
+      register: ec2_vol
 
     # build a dictionary of instance attributes
     - set_fact:
@@ -36,3 +48,4 @@
         timeout: 320
         state: started
       with_items: "{{ ec2.instances }}"
+      when: wait_for_ssh
