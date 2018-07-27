@@ -1,0 +1,6 @@
+# vim: set ft=yaml :
+---
+aws_keypair: openshift_onap
+aws_instance_type: t2.large
+aws_image: ami-9887c6e7
+aws_region: us-east-1

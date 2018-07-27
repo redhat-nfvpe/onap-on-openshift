@@ -1,0 +1,7 @@
+---
+    - name: Create EC2 keypair for nodes
+      ec2_key:
+        name: "{{ aws_keypair }}"
+        key_material: "{{ lookup('file', '{{ ansible_env.HOME }}/.ssh/id_rsa.pub') }}"
+        region: "{{ aws_region }}"
+      delegate_to: localhost

@@ -1,14 +1,25 @@
     - name: Launch instance
       ec2:
-         key_name: "{{ keypair }}"
-         group_id: "{{ security_group }}"
-         instance_type: "{{ instance_type }}"
-         image: "{{ image }}"
+         key_name: "{{ aws_keypair }}"
+         group_id: "{{ sg_id }}"
+         instance_type: "{{ aws_instance_type }}"
+         instance_tags:
+           Name: "{{ node_name }}"
+           NetworkSpace: ONAP
+           Network: External
+         image: "{{ aws_image }}"
          wait: true
-         region: "{{ region }}"
+         region: "{{ aws_region }}"
          vpc_subnet_id: "{{ vpc_subnet_id }}"
          assign_public_ip: yes
+         count_tag:
+           Name: "{{ node_name }}"
+         exact_count: 1
       register: ec2
+
+    # build a dictionary of instance attributes
+    - set_fact:
+        provisioned_vms: "{{ provisioned_vms + [ec2] }}"
 
     - name: Add new instance to host group
       add_host:
