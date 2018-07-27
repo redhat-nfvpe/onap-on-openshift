@@ -32,6 +32,10 @@ openshift_security_groups:
         cidr_ip: 0.0.0.0/0
   - name: openshift_internal
     rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
       - proto: all
         ports:
           - 0-65535
